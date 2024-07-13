@@ -74,6 +74,8 @@ class BaseWindow(mglw.WindowConfig):
 
         self.text_renderer = TextRenderer(self, os.path.join(current_folder, 'fonts/UbuntuMono-R.ttf') , 12)
 
+        self.sleep_time = 0
+
     def draw_image(self, tex, x, y, w, h):
         tex.use(0)
         self.draw_rect((1.0, 1.0, 1.0, 1.0), x, y, w, h, True)
@@ -132,7 +134,8 @@ class BaseWindow(mglw.WindowConfig):
         return self.mouse_x > self.viewports[idx][0] and self.mouse_x < self.viewports[idx][0] + self.viewports[idx][2] and self.mouse_y > self.viewports[idx][1] and self.mouse_y < self.viewports[idx][1] + self.viewports[idx][3]
 
     def wait_for_next_frame(self, current_time: float):
-        time.sleep(max(0, 1/self.framerate - (self.timer.time - current_time)))
+        self.sleep_time = 0.5 * self.sleep_time + 0.5 * max(0, 1/self.framerate - (self.timer.time - current_time))
+        time.sleep(self.sleep_time)
 
     def key_event(self, key, action, modifiers):
         self.imgui.key_event(key, action, modifiers)
